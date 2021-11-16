@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<launch>	 
+  <arg name="x_pos" default="4.0"/>
+  <arg name="y_pos" default="0.2"/>
+  <arg name="z_pos" default="1.0"/>
+  <arg name="r_ori" default="0.0"/>
+  <arg name="p_ori" default="0.0"/>
+  <arg name="y_ori" default="-3.1"/>
+
+  <arg name="model" default = "raspicat" />
+  <arg name="paused" default="false" />
+  <arg name="use_sim_time" default="true" />
+  <arg name="gui" default="true" />
+  <arg name="debug" default="false" />
+  <arg name="headless" default="false" />
+  
+  <!-- <arg name="open_rviz" default="true"/> -->
+  <!-- <arg name="multi_robot_name" default=""/> -->
+  <!-- <param name="use_gui" value="$(arg gui)"/> -->
+  <!-- <arg name="lidar" default="none" /> -->
+
+  <env name="GAZEBO_MODEL_PATH" value="$(find slope_world)/gazebo_models" />
+
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+
+   <arg name="world_name" value="$(find slope_world)/world/environment.world"/>	
+   <arg name="paused" value="$(arg paused)"/>
+   <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+   <arg name="gui" value="$(arg gui)"/>
+   <arg name="recording" value="false"/>
+   <arg name="debug" value="$(arg debug)"/>
+   <arg name="headless" value="$(arg headless)" />
+  </include>
+
+  <param name="robot_description" command="$(find xacro)/xacro --inorder $(find raspicat)/urdf/raspicat.urdf.xacro "/>
+
+  <node pkg="gazebo_ros" type="spawn_model" name="spawn_urdf"  args="-urdf -model $(arg model) -x $(arg x_pos) -y $(arg y_pos) -z $(arg z_pos) -R $(arg r_ori) -P $(arg p_ori) -Y $(arg y_ori) -param robot_description" />
+  
+</launch>
