@@ -1,2 +1,8 @@
 # slope_world
 スロープがある環境をgazeboで作成したパッケージ
+
+使用しているロボットはturtlebot3,raspicat,seed_noidである
+
+1番実験しやすいのはturtlebot3なのでturtlebot3のlaunchをおすすめする
+
+またスロープ環境に関して、斜度が違ったり周辺環境が複雑であったり、いろんなstlファイルがあるためいろいろ試すとよい
