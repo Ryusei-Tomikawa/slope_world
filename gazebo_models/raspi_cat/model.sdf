@@ -1,0 +1,22 @@
+<?xml version="1.0" ?>
+<sdf version="1.0">
+<model name="raspi_cat">
+<static>true</static>
+<link name="base">
+<pose>0 0 0 0 0 0</pose>
+<visual name="visual">
+<geometry>
+<mesh>
+<uri>model://raspi_cat/meshes/raspberry_pi_cat.stl</uri>
+</mesh>
+</geometry></visual>
+<collision name="simple_collision">
+<geometry>
+<mesh>
+<uri>model://raspi_cat/meshes/raspberry_pi_cat.stl</uri>
+</mesh>
+</geometry>
+</collision>
+</link>
+</model>
+</sdf>
