@@ -1,73 +1,35 @@
 <?xml version="1.0"?>
 <launch>
+  
+  <env name="GAZEBO_MODEL_PATH" value="$(find slope_world)/gazebo_models" />
+  
   <!-- parameters when using models in official package -->
-  <arg name="robot_model"         default="typef"/>
-  <arg name="moveit_config_pkg"   default="$(find seed_r7_moveit_config)/../seed_r7_$(arg robot_model)_moveit_config"/>
-  <arg name="robot_model_plugin" default="seed_r7_robot_interface/$(arg robot_model)"/>
-  <arg name="x_pos" default="4.0"/>
-  <arg name="y_pos" default="0.2"/>
+  <arg name="robot_model"       default="typef"/>
+  <!-- <arg name="WORLD_FILE"        default="$(find seed_r7_gazebo)/worlds/example.world"/> -->
+  <!-- <arg name="WORLD_FILE"        default="$(find slope_world)/world/slope_world.world"/> -->
+  <arg name="WORLD_FILE"        default="$(find slope_world)/world/slope_environment_seed_r7.world"/>
+  <arg name="GUI"               default="true"/>
+	 
+  <arg name="x_pos" default="-6.5"/>
+  <arg name="y_pos" default="0.35"/>
   <arg name="z_pos" default="0.0"/>
   <arg name="r_ori" default="0.0"/>
   <arg name="p_ori" default="0.0"/>
-  <arg name="y_ori" default="-3.1"/>
-  <!-- parameters when using models in user packages -->
-  
-  <!-- other settings -->
-  <arg name="controller_rate"     default="50"/>
-  <arg name="overlap_scale"       default="2.0"/>
-  <arg name="csv_config_dir"      default="$(find seed_r7_description)/csv"/>
-  <arg name="robot_joint_config"  default="$(find seed_r7_robot_interface)/$(arg robot_model)/config/joint_settings.yaml"/>
-  <arg name="controller_settings" default="$(find seed_r7_description)/$(arg robot_model)/controller_settings.yaml"/>
+  <arg name="y_ori" default="0.0"/>
 
-  <env name="GAZEBO_MODEL_PATH" value="$(find slope_world)/gazebo_models" />
-
-  <include file="$(find gazebo_ros)/launch/empty_world.launch">
-
-   <arg name="world_name" value="$(find slope_world)/world/slope_world.world"/>	
-   <arg name="paused" value="false"/>
-   <arg name="use_sim_time" value="true"/>
-   <arg name="gui" value="true"/>
-   <arg name="recording" value="false"/>
-   <arg name="debug" value="false"/>
-
+  <include file="$(find seed_r7_gazebo)/launch/seed_r7_empty_world.launch">
+    <arg name="robot_model"     value="$(arg robot_model)"/>
+    <arg name="WORLD_FILE"      value="$(arg WORLD_FILE)"/>
+    <arg name="GUI"             value="$(arg GUI)"/>
+    <arg name="x_pos" value="$(arg x_pos)"/>
+    <arg name="y_pos" value="$(arg y_pos)"/>
+    <arg name="z_pos" value="$(arg z_pos)"/>
+    <arg name="r_ori" value="$(arg r_ori)"/>
+    <arg name="p_ori" value="$(arg p_ori)"/>
+    <arg name="y_ori" value="$(arg y_ori)"/>
+    
   </include>
 
-  <rosparam file="$(find seed_r7_gazebo)/config/gazebo_controller.yaml" command="load" />
-
-   <!-- controller settings / load from yaml -->
-  <rosparam command="load" file="$(arg controller_settings)" />
-  <rosparam command="load" file="$(arg robot_joint_config)" />
-  <rosparam command="load"
-	    file="$(find seed_r7_robot_interface)/$(arg robot_model)/config/extra_controller_settings.yaml" />
-
-   <!-- Load the URDF into the ROS Parameter Server -->
-  <param name="robot_description" command="$(find xacro)/xacro 
-              $(find seed_r7_description)/$(arg robot_model)/noid.urdf.xacro --inorder"/>
-
-  <node pkg="gazebo_ros" type="spawn_model" name="spawn_urdf"  args="-urdf -model $(arg robot_model) -x $(arg x_pos) -y $(arg y_pos) -z $(arg z_pos) -R $(arg r_ori) -P $(arg p_ori) -Y $(arg y_ori) -param robot_description" />
-
-   <!-- load the controllers -->
-  <node name="controller_spawner" pkg="controller_manager" type="spawner"
-        respawn="false" output="screen" ns="/"
-        args="joint_state_controller head_controller waist_controller
-              lifter_controller larm_controller rarm_controller
-              lhand_controller rhand_controller" />
-  
-  <!-- <node pkg="seed_r7_ros_controller" type="seed_r7_ros_controller" name="seed_r7_ros_controller" output="screen"> -->
-  <!--   <param name="port_lower" value="/dev/serial/by-id/usb-FTDI_TTL232R-3V3_FT9JAW81-if00-port0"/> -->
-  <!--   <param name="port_upper" value="/dev/serial/by-id/usb-FTDI_TTL232R-3V3_FT98HKZC-if00-port0"/> -->
-  <!--   <param name="csv_config_dir" value="$(arg csv_config_dir)"/> -->
-  <!--   <param name="robot_model_plugin" value="$(arg robot_model_plugin)"/> -->
-  <!--   <param name="controller_rate" value="$(arg controller_rate)"/> <!-\- [ Hz ] ( rate of read/write cycle) -\-> -->
-  <!--   <param name="overlap_scale"   value="$(arg overlap_scale)"/>   <!-\- scaling of target time -\-> -->
-  <!-- </node> -->
-
-  <!-- MoveIt! -->
-  <include file="$(arg moveit_config_pkg)/launch/move_group.launch" />
-  <include file="$(arg moveit_config_pkg)/launch/planning_context.launch">
-    <arg name="load_robot_description" value="true"/>
-  </include>
-
-  <node name="lifter" pkg="seed_r7_samples" type="lifter.py" output="screen"  />
+  <node pkg="rsdlab_fcsc_pkg" name="lifter" type="lifter.py" output="screen"/>
 
 </launch>

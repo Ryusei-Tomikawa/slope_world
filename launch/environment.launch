@@ -3,7 +3,7 @@
 
   <env name="GAZEBO_MODEL_PATH" value="$(find slope_world)/gazebo_models" />
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
-    <arg name="world_name" value="$(find slope_world)/world/slope_world.world"/>	
+    <arg name="world_name" value="$(find slope_world)/world/slope_environment_seed_r7.world"/>	
     <arg name="paused" value="false"/>
     <arg name="use_sim_time" value="true"/>
     <arg name="gui" value="true"/>
